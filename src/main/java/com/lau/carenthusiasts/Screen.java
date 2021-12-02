@@ -34,6 +34,7 @@ public class Screen extends AppCompatActivity {
     ArrayList<String> salesURLs;
     ArrayList<String> salesPrices;
     ArrayList<String> salesPhoneNo;
+    static ArrayList<String> myCart;
     EditText description;
     EditText imageURL;
     EditText price;
@@ -60,6 +61,7 @@ public class Screen extends AppCompatActivity {
         salesURLs=new ArrayList<String>();
         salesPrices=new ArrayList<String>();
         salesPhoneNo=new ArrayList<String>();
+        myCart=new ArrayList<String>();
         view= (ListView) findViewById(R.id.listView);
         addSales=(Button) findViewById(R.id.addSaleButton);
         addToList=(Button) findViewById(R.id.addToListBtn);
@@ -225,8 +227,11 @@ public class Screen extends AppCompatActivity {
         addToList.setVisibility(View.VISIBLE);
         contactphoneNo.setVisibility(View.VISIBLE);
         btn.setVisibility(View.INVISIBLE);
-
-
+    }
+    public void cartFunc(View v){
+        state=3;
+        ArrayAdapter<String> adapter=new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,myCart);
+        view.setAdapter(adapter);
 
     }
 }

@@ -13,6 +13,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,6 +25,8 @@ import javax.net.ssl.HttpsURLConnection;
 public class Sales extends AppCompatActivity {
     ImageView imageView;
     TextView desc,phoneNo,price;
+    Button addBtn;
+    String imgURL,description,recPhoneNo,recPrice;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,10 +36,11 @@ public class Sales extends AppCompatActivity {
         desc=(TextView) findViewById(R.id.saleDescription);
         phoneNo=(TextView) findViewById(R.id.RecPhoneNo);
         price=(TextView)findViewById(R.id.RecPrice);
-        String imgURL=intent.getStringExtra(EXTRA_MESSAGE);
-        String description=intent.getStringExtra(DESCRIPTION);
-        String recPhoneNo=intent.getStringExtra(SALEPHONENO);
-        String recPrice=intent.getStringExtra(SALEPRICE);
+        addBtn=(Button) findViewById(R.id.addToCartBtn);
+        imgURL=intent.getStringExtra(EXTRA_MESSAGE);
+        description=intent.getStringExtra(DESCRIPTION);
+        recPhoneNo=intent.getStringExtra(SALEPHONENO);
+        recPrice=intent.getStringExtra(SALEPRICE);
         desc.setText(description);
         phoneNo.setText("Contact Phone Number: "+recPhoneNo);
         price.setText("Price: "+recPrice+"$");
@@ -73,6 +77,10 @@ public class Sales extends AppCompatActivity {
             }
 
         }
+    }
+    public void addToCart(View view){
+            Screen.myCart.add("Description: "+description+"\nPrice: "+recPrice+"$"+"\nContact Phone Number: "+recPhoneNo);
+            finish();
     }
 
 }
