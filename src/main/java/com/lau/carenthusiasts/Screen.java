@@ -5,11 +5,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONObject;
 
@@ -26,9 +32,16 @@ public class Screen extends AppCompatActivity {
     ArrayList<String> newsURLs;
     ArrayList<String> salesDesc;
     ArrayList<String> salesURLs;
+    EditText description;
+    EditText imageURL;
+    EditText price;
     public static final String EXTRA_MESSAGE = "Link";
     public static final String DESCRIPTION = "Description";
+    Button addSales;
+    Button addToList;
     int state=0;
+    FirebaseDatabase rootNode;
+    DatabaseReference reference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +53,11 @@ public class Screen extends AppCompatActivity {
         salesDesc=new ArrayList<String>();
         salesURLs=new ArrayList<String>();
         view= (ListView) findViewById(R.id.listView);
+        addSales=(Button) findViewById(R.id.addSaleButton);
+        addToList=(Button) findViewById(R.id.addToListBtn);
+        description=(EditText) findViewById(R.id.Description);
+        imageURL=(EditText) findViewById(R.id.ImageURL);
+        price=(EditText) findViewById(R.id.Price);
         NewsJsonGetter newsJsonGetter=new NewsJsonGetter();
         newsJsonGetter.execute("https://tutorial-a86d5-default-rtdb.firebaseio.com/news.json");
         view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -60,6 +78,7 @@ public class Screen extends AppCompatActivity {
 
             }
         });
+
 
     }
     public class NewsJsonGetter extends AsyncTask<String,Void,String>{
@@ -136,7 +155,7 @@ public class Screen extends AppCompatActivity {
                     String sale=json.get(json.names().getString(i)).toString();
                     JSONObject saleobj=new JSONObject(sale);
                     salesDesc.add(saleobj.getString("description"));
-                    salesURLs.add(saleobj.getString("imgurl"));
+                    salesURLs.add(saleobj.getString("imgURL"));
                     ArrayAdapter<String> adapter=new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,salesDesc);
                     view.setAdapter(adapter);
                 }
@@ -145,19 +164,52 @@ public class Screen extends AppCompatActivity {
             }
         }
     }
-    public void salesFunc(View view){
+    public void salesFunc(View v){
         state=1;
+        addSales.setVisibility(View.VISIBLE);
         salesURLs.clear();
         salesDesc.clear();
         SalesJsonGetter salesJsonGetter=new SalesJsonGetter();
         salesJsonGetter.execute("https://tutorial-a86d5-default-rtdb.firebaseio.com/sales.json");
+
     }
-    public void homeFunc(View view){
+    public void homeFunc(View v){
         state=0;
         newsURLs.clear();
         newsTitles.clear();
         NewsJsonGetter newsJsonGetter=new NewsJsonGetter();
         newsJsonGetter.execute("https://tutorial-a86d5-default-rtdb.firebaseio.com/news.json");
+
+
+    }
+    public void addToList(View currBtn){
+        String etDescription=description.getText().toString();
+        String etURL=imageURL.getText().toString();
+        String etPrice=price.getText().toString();
+        if(!etDescription.isEmpty()&&!etURL.isEmpty()&&!etPrice.isEmpty()){
+            rootNode=FirebaseDatabase.getInstance();
+            reference= rootNode.getReference("sales");
+            SaleHelperClass saleHelperClass=new SaleHelperClass(etDescription,etURL,etPrice);
+            reference.child("sale"+Integer.toString(numSales+1)).setValue(saleHelperClass);
+            description.setVisibility(View.INVISIBLE);
+            imageURL.setVisibility(View.INVISIBLE);
+            price.setVisibility(View.INVISIBLE);
+            view.setVisibility(View.VISIBLE);
+            salesFunc(currBtn);
+            currBtn.setVisibility(View.INVISIBLE);
+
+        }
+
+    }
+    public void addSaleFunc(View btn){
+        view.setVisibility(View.INVISIBLE);
+        description.setVisibility(View.VISIBLE);
+        imageURL.setVisibility(View.VISIBLE);
+        price.setVisibility(View.VISIBLE);
+        addToList.setVisibility(View.VISIBLE);
+        btn.setVisibility(View.INVISIBLE);
+
+
 
     }
 }
