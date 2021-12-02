@@ -2,6 +2,8 @@ package com.lau.carenthusiasts;
 
 import static com.lau.carenthusiasts.Screen.DESCRIPTION;
 import static com.lau.carenthusiasts.Screen.EXTRA_MESSAGE;
+import static com.lau.carenthusiasts.Screen.SALEPHONENO;
+import static com.lau.carenthusiasts.Screen.SALEPRICE;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,7 +23,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class Sales extends AppCompatActivity {
     ImageView imageView;
-    TextView desc;
+    TextView desc,phoneNo,price;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,9 +31,15 @@ public class Sales extends AppCompatActivity {
         Intent intent=getIntent();
         imageView=(ImageView) findViewById(R.id.carImage);
         desc=(TextView) findViewById(R.id.saleDescription);
+        phoneNo=(TextView) findViewById(R.id.RecPhoneNo);
+        price=(TextView)findViewById(R.id.RecPrice);
         String imgURL=intent.getStringExtra(EXTRA_MESSAGE);
         String description=intent.getStringExtra(DESCRIPTION);
+        String recPhoneNo=intent.getStringExtra(SALEPHONENO);
+        String recPrice=intent.getStringExtra(SALEPRICE);
         desc.setText(description);
+        phoneNo.setText("Contact Phone Number: "+recPhoneNo);
+        price.setText("Price: "+recPrice+"$");
         ImageDownloader task=new ImageDownloader();
         Bitmap downloadedImage;
 

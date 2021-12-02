@@ -2,13 +2,15 @@ package com.lau.carenthusiasts;
 
 public class SaleHelperClass {
     String description;
-    String imgurl;
+    String imgURL;
     String price;
+    String phoneNo;
 
-    public SaleHelperClass(String description, String imgURL, String price) {
+    public SaleHelperClass(String description, String imgURL, String price, String phoneNo) {
         this.description = description;
-        this.imgurl = imgURL;
+        this.imgURL = imgURL;
         this.price = price;
+        this.phoneNo = phoneNo;
     }
 
     public SaleHelperClass() {
@@ -23,11 +25,11 @@ public class SaleHelperClass {
     }
 
     public String getImgURL() {
-        return imgurl;
+        return imgURL;
     }
 
     public void setImgURL(String imgURL) {
-        this.imgurl = imgURL;
+        this.imgURL = imgURL;
     }
 
     public String getPrice() {
@@ -36,5 +38,13 @@ public class SaleHelperClass {
 
     public void setPrice(String price) {
         this.price = price;
+    }
+
+    public String getPhoneNo() {
+        return phoneNo;
+    }
+
+    public void setPhoneNo(String phoneNo) {
+        this.phoneNo = phoneNo;
     }
 }
