@@ -5,14 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -39,12 +38,14 @@ public class Screen extends AppCompatActivity {
     EditText imageURL;
     EditText price;
     EditText contactphoneNo;
+    TextView totPrice,txt;
     public static final String EXTRA_MESSAGE = "Link";
     public static final String DESCRIPTION = "Description";
     public static final String SALEPRICE="SalePrice";
     public static final String SALEPHONENO="SalePhoneNo";
     Button addSales;
     Button addToList;
+    Button checkOutButton;
     int state=0;
     FirebaseDatabase rootNode;
     DatabaseReference reference;
@@ -65,10 +66,13 @@ public class Screen extends AppCompatActivity {
         view= (ListView) findViewById(R.id.listView);
         addSales=(Button) findViewById(R.id.addSaleButton);
         addToList=(Button) findViewById(R.id.addToListBtn);
+        checkOutButton=(Button) findViewById(R.id.checkOutButton);
         description=(EditText) findViewById(R.id.Description);
         imageURL=(EditText) findViewById(R.id.ImageURL);
         price=(EditText) findViewById(R.id.Price);
         contactphoneNo=(EditText) findViewById(R.id.contactPhoneNo);
+        totPrice=(TextView) findViewById(R.id.totalPrice);
+        txt=(TextView)findViewById(R.id.Txt);
         NewsJsonGetter newsJsonGetter=new NewsJsonGetter();
         newsJsonGetter.execute("https://tutorial-a86d5-default-rtdb.firebaseio.com/news.json");
         view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -165,6 +169,10 @@ public class Screen extends AppCompatActivity {
             try{
                 JSONObject json=new JSONObject(s);
                 numSales=json.names().length();
+                salesURLs.clear();
+                salesDesc.clear();
+                salesPrices.clear();
+                salesPhoneNo.clear();
                 for(int i=0;i<json.names().length();i++){
                     String sale=json.get(json.names().getString(i)).toString();
                     JSONObject saleobj=new JSONObject(sale);
@@ -183,14 +191,71 @@ public class Screen extends AppCompatActivity {
     public void salesFunc(View v){
         state=1;
         addSales.setVisibility(View.VISIBLE);
-        salesURLs.clear();
-        salesDesc.clear();
+
+        if(totPrice.getVisibility()==View.VISIBLE){
+            totPrice.setVisibility(View.INVISIBLE);
+        }
+        if(checkOutButton.getVisibility()==View.VISIBLE){
+            checkOutButton.setVisibility(View.INVISIBLE);
+        }
+        if(txt.getVisibility()==View.VISIBLE){
+            txt.setVisibility(View.INVISIBLE);
+        }
+        if(description.getVisibility()==View.VISIBLE){
+            description.setVisibility(View.INVISIBLE);
+        }
+        if(imageURL.getVisibility()==View.VISIBLE){
+            imageURL.setVisibility(View.INVISIBLE);
+        }
+        if(price.getVisibility()==View.VISIBLE){
+            price.setVisibility(View.INVISIBLE);
+        }
+        if(contactphoneNo.getVisibility()==View.VISIBLE){
+            contactphoneNo.setVisibility(View.INVISIBLE);
+        }
+        if(addToList.getVisibility()==View.VISIBLE){
+            addToList.setVisibility(View.INVISIBLE);
+        }
+
         SalesJsonGetter salesJsonGetter=new SalesJsonGetter();
         salesJsonGetter.execute("https://tutorial-a86d5-default-rtdb.firebaseio.com/sales.json");
+        if(view.getVisibility()!=View.VISIBLE){
+            view.setVisibility(View.VISIBLE);
+        }
 
     }
     public void homeFunc(View v){
         state=0;
+        if(view.getVisibility()!=View.VISIBLE){
+            view.setVisibility(View.VISIBLE);
+        }
+        if(totPrice.getVisibility()==View.VISIBLE){
+            totPrice.setVisibility(View.INVISIBLE);
+        }
+        if(checkOutButton.getVisibility()==View.VISIBLE){
+            checkOutButton.setVisibility(View.INVISIBLE);
+        }
+        if(txt.getVisibility()==View.VISIBLE){
+            txt.setVisibility(View.INVISIBLE);
+        }
+        if(description.getVisibility()==View.VISIBLE){
+            description.setVisibility(View.INVISIBLE);
+        }
+        if(imageURL.getVisibility()==View.VISIBLE){
+            imageURL.setVisibility(View.INVISIBLE);
+        }
+        if(price.getVisibility()==View.VISIBLE){
+            price.setVisibility(View.INVISIBLE);
+        }
+        if(contactphoneNo.getVisibility()==View.VISIBLE){
+            contactphoneNo.setVisibility(View.INVISIBLE);
+        }
+        if(addToList.getVisibility()==View.VISIBLE){
+            addToList.setVisibility(View.INVISIBLE);
+        }
+        if(addSales.getVisibility()==View.VISIBLE){
+            addSales.setVisibility(View.INVISIBLE);
+        }
         newsURLs.clear();
         newsTitles.clear();
         NewsJsonGetter newsJsonGetter=new NewsJsonGetter();
@@ -212,6 +277,8 @@ public class Screen extends AppCompatActivity {
             imageURL.setVisibility(View.INVISIBLE);
             price.setVisibility(View.INVISIBLE);
             contactphoneNo.setVisibility(View.INVISIBLE);
+            SalesJsonGetter salesJsonGetter=new SalesJsonGetter();
+            salesJsonGetter.execute("https://tutorial-a86d5-default-rtdb.firebaseio.com/sales.json");
             view.setVisibility(View.VISIBLE);
             salesFunc(currBtn);
             currBtn.setVisibility(View.INVISIBLE);
@@ -230,6 +297,27 @@ public class Screen extends AppCompatActivity {
     }
     public void cartFunc(View v){
         state=3;
+        if(view.getVisibility()!=View.VISIBLE){
+            view.setVisibility(View.VISIBLE);
+        }
+        if(description.getVisibility()==View.VISIBLE){
+            description.setVisibility(View.INVISIBLE);
+        }
+        if(imageURL.getVisibility()==View.VISIBLE){
+            imageURL.setVisibility(View.INVISIBLE);
+        }
+        if(price.getVisibility()==View.VISIBLE){
+            price.setVisibility(View.INVISIBLE);
+        }
+        if(contactphoneNo.getVisibility()==View.VISIBLE){
+            contactphoneNo.setVisibility(View.INVISIBLE);
+        }
+        if(addToList.getVisibility()==View.VISIBLE){
+            addToList.setVisibility(View.INVISIBLE);
+        }
+        if(addSales.getVisibility()==View.VISIBLE){
+            addSales.setVisibility(View.INVISIBLE);
+        }
         ArrayAdapter<String> adapter=new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,myCart);
         view.setAdapter(adapter);
 
