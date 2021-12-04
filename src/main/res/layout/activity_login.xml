@@ -23,12 +23,12 @@
         app:layout_constraintVertical_bias="0.176" />
 
     <EditText
-        android:id="@+id/etUsername"
+        android:id="@+id/etEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="#F8F8F8"
         android:ems="10"
-        android:hint="Username"
+        android:hint="Email"
         android:inputType="textEmailAddress"
         android:textColor="#F8F6F6"
         android:textColorHint="@color/white"

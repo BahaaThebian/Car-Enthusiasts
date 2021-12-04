@@ -36,9 +36,10 @@ public class Register extends AppCompatActivity {
         String email=regEmail.getText().toString();
         String phoneNo=regPhoneNo.getText().toString();
         String password=regPassword.getText().toString();
-        UserHelperClass helperClass=new UserHelperClass(name,username,email,phoneNo,password);
+        String sha256hex=org.apache.commons.codec.digest.DigestUtils.sha256Hex(password);
+        UserHelperClass helperClass=new UserHelperClass(name,username,email,phoneNo,sha256hex);
 
-        reference.child(username).setValue(helperClass);
+        reference.child(email.replace("@","").replace(".","")).setValue(helperClass);
         Intent intent=new Intent(this,Login.class);
         startActivity(intent);
     }

@@ -17,18 +17,18 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 public class Login extends AppCompatActivity {
-    EditText username;
+    EditText email;
     EditText password;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        username=(EditText) findViewById(R.id.etUsername);
+        email=(EditText) findViewById(R.id.etEmail);
         password=(EditText) findViewById(R.id.etPassword);
 
     }
-    private Boolean validateUsername(){
-        String val= username.getText().toString();
+    private Boolean validateEmail(){
+        String val= email.getText().toString();
         if(val.isEmpty()){
             Toast.makeText(getApplicationContext(),"Field cannot be empty",Toast.LENGTH_LONG).show();
             return false;
@@ -51,25 +51,25 @@ public class Login extends AppCompatActivity {
         startActivity(intent);
     }
     public void login(View view){
-        if(!validatePassword() | !validateUsername()){
+        if(!validatePassword() | !validateEmail()){
             return;
         }else{
             isUser();
         }
     }
     public void isUser(){
-        String etUsername=username.getText().toString().trim();
+        String etEmail=email.getText().toString().trim();
         String etPassword=password.getText().toString().trim();
-
+        String sha256hex=org.apache.commons.codec.digest.DigestUtils.sha256Hex(etPassword);
         DatabaseReference reference= FirebaseDatabase.getInstance().getReference("users");
-        Query checkUser=reference.orderByChild("username").equalTo(etUsername);
+        Query checkUser=reference.orderByChild("email").equalTo(etEmail);
         checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
 
-                    String dbpassword=snapshot.child(etUsername).child("password").getValue(String.class);
-                    if(dbpassword.equals(etPassword)){
+                    String dbpassword=snapshot.child(etEmail.replace("@","").replace(".","")).child("password").getValue(String.class);
+                    if(dbpassword.equals(sha256hex)){
                         Intent intent=new Intent(getApplicationContext(),Screen.class);
                         startActivity(intent);
 
