@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CarEnthusiasts">
         <activity
+            android:name=".Merch"
+            android:exported="true" />
+        <activity
             android:name=".Sales"
             android:exported="true" />
         <activity

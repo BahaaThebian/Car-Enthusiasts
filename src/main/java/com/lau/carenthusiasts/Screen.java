@@ -33,6 +33,10 @@ public class Screen extends AppCompatActivity {
     ArrayList<String> salesURLs;
     ArrayList<String> salesPrices;
     ArrayList<String> salesPhoneNo;
+    ArrayList<String> merchImageURLs;
+    ArrayList<String> merchURLs;
+    ArrayList<String> merchRatings;
+    ArrayList<String> merchDesc;
     static ArrayList<String> myCart;
     EditText description;
     EditText imageURL;
@@ -43,6 +47,10 @@ public class Screen extends AppCompatActivity {
     public static final String DESCRIPTION = "Description";
     public static final String SALEPRICE="SalePrice";
     public static final String SALEPHONENO="SalePhoneNo";
+    public static final String MERCHIMAGEURL="merchImageURL";
+    public static final String MERCHURL="merchURL";
+    public static final String MERCHRATING="merchRating";
+    public static final String MERCHDESCRIPTION="merchDescription";
     Button addSales;
     Button addToList;
     Button checkOutButton;
@@ -62,6 +70,10 @@ public class Screen extends AppCompatActivity {
         salesURLs=new ArrayList<String>();
         salesPrices=new ArrayList<String>();
         salesPhoneNo=new ArrayList<String>();
+        merchDesc=new ArrayList<String>();
+        merchImageURLs=new ArrayList<String>();
+        merchRatings=new ArrayList<String>();
+        merchURLs=new ArrayList<String>();
         myCart=new ArrayList<String>();
         view= (ListView) findViewById(R.id.listView);
         addSales=(Button) findViewById(R.id.addSaleButton);
@@ -89,9 +101,15 @@ public class Screen extends AppCompatActivity {
                     intent.putExtra(DESCRIPTION,salesDesc.get(i));
                     intent.putExtra(SALEPRICE,salesPrices.get(i));
                     intent.putExtra(SALEPHONENO,salesPhoneNo.get(i));
-
                     startActivity(intent);
-
+                }
+                else if(state==2){
+                    Intent intent=new Intent(getApplicationContext(),Merch.class);
+                    intent.putExtra(MERCHDESCRIPTION,merchDesc.get(i));
+                    intent.putExtra(MERCHIMAGEURL,merchImageURLs.get(i));
+                    intent.putExtra(MERCHRATING,merchRatings.get(i));
+                    intent.putExtra(MERCHURL,merchURLs.get(i));
+                    startActivity(intent);
                 }
 
             }
@@ -181,6 +199,49 @@ public class Screen extends AppCompatActivity {
                     salesPhoneNo.add(saleobj.getString("phoneNo"));
                     salesPrices.add(saleobj.getString("price"));
                     ArrayAdapter<String> adapter=new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,salesDesc);
+                    view.setAdapter(adapter);
+                }
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+    public class MerchJsonGetter extends AsyncTask<String,Void,String>{
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String result="";
+            URL url;
+            HttpURLConnection urlConnection;
+            try{
+                url=new URL(strings[0]);
+                urlConnection=(HttpURLConnection) url.openConnection();
+                InputStream in=urlConnection.getInputStream();
+                InputStreamReader reader=new InputStreamReader(in);
+                int data=reader.read();
+                while(data!=-1){
+                    char current=(char) data;
+                    result+=current;
+                    data=reader.read();
+                }
+                return result;
+            }catch(Exception e){
+                e.printStackTrace();
+                return null;
+            }
+        }
+        protected void onPostExecute(String s){
+            super.onPostExecute(s);
+            try{
+                JSONObject json=new JSONObject(s);
+                for(int i=0;i<json.names().length();i++){
+                    String merch=json.get(json.names().getString(i)).toString();
+                    JSONObject merchobj=new JSONObject(merch);
+                    merchDesc.add(merchobj.getString("description"));
+                    merchImageURLs.add(merchobj.getString("imgURL"));
+                    merchURLs.add(merchobj.getString("link"));
+                    merchRatings.add(merchobj.getString("rating"));
+                    ArrayAdapter<String> adapter=new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,merchDesc);
                     view.setAdapter(adapter);
                 }
             }catch(Exception e){
@@ -321,5 +382,44 @@ public class Screen extends AppCompatActivity {
         ArrayAdapter<String> adapter=new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,myCart);
         view.setAdapter(adapter);
 
+    }
+    public void merchFunc(View v){
+        state=2;
+        if(view.getVisibility()!=View.VISIBLE){
+            view.setVisibility(View.VISIBLE);
+        }
+        if(totPrice.getVisibility()==View.VISIBLE){
+            totPrice.setVisibility(View.INVISIBLE);
+        }
+        if(checkOutButton.getVisibility()==View.VISIBLE){
+            checkOutButton.setVisibility(View.INVISIBLE);
+        }
+        if(txt.getVisibility()==View.VISIBLE){
+            txt.setVisibility(View.INVISIBLE);
+        }
+        if(description.getVisibility()==View.VISIBLE){
+            description.setVisibility(View.INVISIBLE);
+        }
+        if(imageURL.getVisibility()==View.VISIBLE){
+            imageURL.setVisibility(View.INVISIBLE);
+        }
+        if(price.getVisibility()==View.VISIBLE){
+            price.setVisibility(View.INVISIBLE);
+        }
+        if(contactphoneNo.getVisibility()==View.VISIBLE){
+            contactphoneNo.setVisibility(View.INVISIBLE);
+        }
+        if(addToList.getVisibility()==View.VISIBLE){
+            addToList.setVisibility(View.INVISIBLE);
+        }
+        if(addSales.getVisibility()==View.VISIBLE){
+            addSales.setVisibility(View.INVISIBLE);
+        }
+        merchURLs.clear();
+        merchRatings.clear();
+        merchDesc.clear();
+        merchImageURLs.clear();
+        MerchJsonGetter merchJsonGetter=new MerchJsonGetter();
+        merchJsonGetter.execute("https://tutorial-a86d5-default-rtdb.firebaseio.com/merch.json");
     }
 }
