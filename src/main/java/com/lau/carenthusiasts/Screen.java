@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -40,6 +41,7 @@ public class Screen extends AppCompatActivity {
     ArrayList<String> merchRatings;
     ArrayList<String> merchDesc;
     static ArrayList<String> myCart;
+    static ArrayList<String> cartPrices;
     EditText description;
     EditText imageURL;
     EditText price;
@@ -78,6 +80,7 @@ public class Screen extends AppCompatActivity {
         merchRatings=new ArrayList<String>();
         merchURLs=new ArrayList<String>();
         myCart=new ArrayList<String>();
+        cartPrices=new ArrayList<String>();
         view= (ListView) findViewById(R.id.listView);
         addSales=(Button) findViewById(R.id.addSaleButton);
         addToList=(Button) findViewById(R.id.addToListBtn);
@@ -349,6 +352,8 @@ public class Screen extends AppCompatActivity {
             salesFunc(currBtn);
             currBtn.setVisibility(View.INVISIBLE);
 
+        }else{
+            Toast.makeText(getApplicationContext(),"Field cannot be empty",Toast.LENGTH_LONG).show();
         }
 
     }
@@ -387,6 +392,19 @@ public class Screen extends AppCompatActivity {
         }
         ArrayAdapter<String> adapter=new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,myCart);
         view.setAdapter(adapter);
+        if(!cartPrices.isEmpty()){
+            int totalPrice=0;
+            for(int i=0;i<cartPrices.size();i++){
+                totalPrice+=Integer.parseInt(cartPrices.get(i));
+            }
+            txt.setVisibility(View.VISIBLE);
+            totPrice.setVisibility(View.VISIBLE);
+            txt.setText("Total Price: ");
+            totPrice.setText(Integer.toString(totalPrice)+"$");
+            checkOutButton.setVisibility(View.VISIBLE);
+        }else{
+            Toast.makeText(getApplicationContext(),"Cart is Empty",Toast.LENGTH_LONG).show();
+        }
 
     }
     public void merchFunc(View v){
@@ -428,5 +446,14 @@ public class Screen extends AppCompatActivity {
         merchImageURLs.clear();
         MerchJsonGetter merchJsonGetter=new MerchJsonGetter();
         merchJsonGetter.execute("https://tutorial-a86d5-default-rtdb.firebaseio.com/merch.json");
+    }
+    public void checkOut(View v){
+        myCart.clear();
+        cartPrices.clear();
+        txt.setVisibility(View.INVISIBLE);
+        totPrice.setVisibility(View.INVISIBLE);
+        ArrayAdapter<String> adapter=new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,myCart);
+        view.setAdapter(adapter);
+        v.setVisibility(View.INVISIBLE);
     }
 }

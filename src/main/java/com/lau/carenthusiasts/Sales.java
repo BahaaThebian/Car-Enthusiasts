@@ -80,6 +80,7 @@ public class Sales extends AppCompatActivity {
     }
     public void addToCart(View view){
             Screen.myCart.add("Description: "+description+"\nPrice: "+recPrice+"$"+"\nContact Phone Number: "+recPhoneNo);
+            Screen.cartPrices.add(recPrice);
             finish();
     }
 
