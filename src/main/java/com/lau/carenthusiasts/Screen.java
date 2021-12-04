@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 
 public class Screen extends AppCompatActivity {
     ListView view;
+    ImageView coverImage;
     int numSales=0;
     ArrayList<String> newsTitles;
     ArrayList<String> newsURLs;
@@ -64,6 +66,7 @@ public class Screen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_screen);
         Intent intent=getIntent();
+        coverImage=findViewById(R.id.imageView);
         newsTitles=new ArrayList<String>();
         newsURLs=new ArrayList<String>();
         salesDesc=new ArrayList<String>();
@@ -251,6 +254,7 @@ public class Screen extends AppCompatActivity {
     }
     public void salesFunc(View v){
         state=1;
+        coverImage.setImageResource(R.drawable.ferrari);
         addSales.setVisibility(View.VISIBLE);
 
         if(totPrice.getVisibility()==View.VISIBLE){
@@ -287,6 +291,7 @@ public class Screen extends AppCompatActivity {
     }
     public void homeFunc(View v){
         state=0;
+        coverImage.setImageResource(R.drawable.bugatti);
         if(view.getVisibility()!=View.VISIBLE){
             view.setVisibility(View.VISIBLE);
         }
@@ -358,6 +363,7 @@ public class Screen extends AppCompatActivity {
     }
     public void cartFunc(View v){
         state=3;
+        coverImage.setImageResource(R.drawable.honda);
         if(view.getVisibility()!=View.VISIBLE){
             view.setVisibility(View.VISIBLE);
         }
@@ -385,6 +391,7 @@ public class Screen extends AppCompatActivity {
     }
     public void merchFunc(View v){
         state=2;
+        coverImage.setImageResource(R.drawable.merchandise);
         if(view.getVisibility()!=View.VISIBLE){
             view.setVisibility(View.VISIBLE);
         }

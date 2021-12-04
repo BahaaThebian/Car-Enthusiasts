@@ -10,8 +10,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,8 +25,9 @@ import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 
 public class Merch extends AppCompatActivity {
-    ImageView imageView;
-    TextView desc,ratingtxt,linktxt;
+    ImageView imageView,ratingImg;
+    TextView desc,ratingtxt;
+    Button btn;
     String imgURL,description,rating,link;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,15 +36,25 @@ public class Merch extends AppCompatActivity {
         Intent intent=getIntent();
         desc=(TextView) findViewById(R.id.merchDesc);
         ratingtxt=(TextView) findViewById(R.id.merchRating);
-        linktxt=(TextView) findViewById(R.id.merchLink);
+        btn=(Button) findViewById(R.id.buyButton);
         imageView=(ImageView) findViewById(R.id.merchImage);
+        ratingImg=(ImageView) findViewById(R.id.ratingImage);
         imgURL=intent.getStringExtra(MERCHIMAGEURL);
         description=intent.getStringExtra(MERCHDESCRIPTION);
         rating=intent.getStringExtra(MERCHRATING);
+        String twoDigits=rating.charAt(0)+""+rating.charAt(1);
+        int rrating=Integer.parseInt(twoDigits);
+        if(rrating>=90){
+            ratingImg.setImageResource(R.drawable.fourptfive);
+        }else if(rrating>=80&&rrating<90){
+            ratingImg.setImageResource(R.drawable.fourstars);
+        }else if(rrating<80&&rrating>=70){
+            ratingImg.setImageResource(R.drawable.threeptfive);
+        }
+
         link=intent.getStringExtra(MERCHURL);
         desc.setText(description);
-        ratingtxt.setText("Rating"+rating);
-        linktxt.setText("Link to buy: "+link);
+        ratingtxt.setText("Rating: "+rating);
         ImageDownloader task=new ImageDownloader();
         Bitmap downloadedImage;
 
@@ -74,6 +89,10 @@ public class Merch extends AppCompatActivity {
 
         }
     }
-
+    public void goToURL(View v){
+        Uri uriUrl=Uri.parse(link);
+        Intent launchBrowser= new Intent(Intent.ACTION_VIEW,uriUrl);
+        startActivity(launchBrowser);
+    }
 
     }
